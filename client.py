@@ -2,7 +2,9 @@ import argparse
 import os
 import sys
 from pathlib import Path
+import requests
 
+from PIL import Image
 import cv2
 import torch
 import torch.backends.cudnn as cudnn
@@ -53,7 +55,6 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
         dnn=False,  # use OpenCV DNN for ONNX inference
         ):
     try:
-        source = default_storage.save(f"tmp.jpg", ContentFile(source.read()))
         source = str(source)
         save_img = not nosave and not source.endswith('.txt')  # save inference images
         is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
@@ -194,3 +195,83 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
     return response
 
 
+def people_detect_classify(image):
+    source = default_storage.save(f"tmp.jpg", ContentFile(image.read()))
+    response = run(weights='yolov5s.pt',  # model.pt path(s)
+                                source=source,  # file/dir/URL/glob, 0 for webcam
+                                data='yolov5/data/coco128.yaml',  # dataset.yaml path
+                                imgsz=(640, 640),  # inference size (height, width)
+                                conf_thres=0.4,  # confidence threshold
+                                iou_thres=0.45,  # NMS IOU threshold
+                                max_det=1000,  # maximum detections per image
+                                device='',  # cuda device, i.e. 0 or 0,1,2,3 or cpu
+                                view_img=False,  # show results
+                                save_txt=False,  # save results to *.txt
+                                save_conf=False,  # save confidences in --save-txt labels
+                                save_crop=False,  # save cropped prediction boxes
+                                nosave=False,  # do not save images/videos
+                                classes=0,  # filter by class: --class 0, or --class 0 2 3
+                                agnostic_nms=False,  # class-agnostic NMS
+                                augment=False,  # augmented inference
+                                visualize=False,  # visualize features
+                                update=False,  # update all models
+                                project='runs/detect',  # save results to project/name
+                                name='exp',  # save results to project/name
+                                exist_ok=False,  # existing project/name ok, do not increment
+                                line_thickness=3,  # bounding box thickness (pixels)
+                                hide_labels=False,  # hide labels
+                                hide_conf=False,  # hide confidences
+                                half=False,  # use FP16 half-precision inference
+                                dnn=True,  # use OpenCV DNN for ONNX inference
+                                )
+                            
+    return response
+
+def people_detect_url(url):
+
+    save_dir = f"store_img/"
+
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+    img_data = requests.get(url).content
+    file_name = save_dir + str(url.split("?")[0].split("/")[-1])
+
+    with open(file_name, 'wb') as handler:
+        handler.write(img_data)
+    
+    # if file_name.endswith('.jpg'):
+    #     try:
+    #         img = Image.open(file_name)  # open the image file
+    #         img.verify()  # verify that it is, in fact an image
+    #     except (IOError, SyntaxError) as e:
+    #         print(file_name)
+    #         os.remove(file_name)
+    
+    response = run(weights='yolov5s.pt',  # model.pt path(s)
+                                source=file_name,  # file/dir/URL/glob, 0 for webcam
+                                data='yolov5/data/coco128.yaml',  # dataset.yaml path
+                                imgsz=(640, 640),  # inference size (height, width)
+                                conf_thres=0.4,  # confidence threshold
+                                iou_thres=0.45,  # NMS IOU threshold
+                                max_det=1000,  # maximum detections per image
+                                device='',  # cuda device, i.e. 0 or 0,1,2,3 or cpu
+                                view_img=False,  # show results
+                                save_txt=False,  # save results to *.txt
+                                save_conf=False,  # save confidences in --save-txt labels
+                                save_crop=False,  # save cropped prediction boxes
+                                nosave=False,  # do not save images/videos
+                                classes=0,  # filter by class: --class 0, or --class 0 2 3
+                                agnostic_nms=False,  # class-agnostic NMS
+                                augment=False,  # augmented inference
+                                visualize=False,  # visualize features
+                                update=False,  # update all models
+                                project='runs/detect',  # save results to project/name
+                                name='exp',  # save results to project/name
+                                exist_ok=False,  # existing project/name ok, do not increment
+                                line_thickness=3,  # bounding box thickness (pixels)
+                                hide_labels=False,  # hide labels
+                                hide_conf=False,  # hide confidences
+                                half=False,  # use FP16 half-precision inference
+                                dnn=True,  # use OpenCV DNN for ONNX inference
+                                )
+    return response

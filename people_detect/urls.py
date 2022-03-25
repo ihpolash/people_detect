@@ -20,4 +20,5 @@ from people import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('people_detect/', views.PeopleDetectClassify.as_view(), name='peopledetect'),
+    path('people_detect_url/', views.PeopleDetectURLClassify.as_view(), name='peopledetecturl'),
 ]
