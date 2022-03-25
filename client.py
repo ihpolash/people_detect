@@ -196,8 +196,8 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
 
 
 def people_detect_classify(image):
-    source = default_storage.save(f"tmp.jpg", ContentFile(image.read()))
-    response = run(weights='yolov5s.pt',  # model.pt path(s)
+    source = default_storage.save(f"tmp/tmp.jpg", ContentFile(image.read()))
+    response = run(weights='yolov5l.pt',  # model.pt path(s)
                                 source=source,  # file/dir/URL/glob, 0 for webcam
                                 data='yolov5/data/coco128.yaml',  # dataset.yaml path
                                 imgsz=(640, 640),  # inference size (height, width)
