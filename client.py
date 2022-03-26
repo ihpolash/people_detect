@@ -27,7 +27,7 @@ from yolov5.utils.plots import Annotator, colors, save_one_box
 from yolov5.utils.torch_utils import select_device, time_sync
 
 
-def run(weights='yolov5s.pt',  # model.pt path(s)
+def run(weights='yolov5l.pt',  # model.pt path(s)
         source='dataset-2',  # file/dir/URL/glob, 0 for webcam
         data='data/coco128.yaml',  # dataset.yaml path
         imgsz=(640, 640),  # inference size (height, width)
@@ -247,7 +247,7 @@ def people_detect_url(url):
     #         print(file_name)
     #         os.remove(file_name)
     
-    response = run(weights='yolov5s.pt',  # model.pt path(s)
+    response = run(weights='yolov5l.pt',  # model.pt path(s)
                                 source=file_name,  # file/dir/URL/glob, 0 for webcam
                                 data='yolov5/data/coco128.yaml',  # dataset.yaml path
                                 imgsz=(640, 640),  # inference size (height, width)
